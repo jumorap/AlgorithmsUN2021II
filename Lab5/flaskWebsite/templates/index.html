@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Chatbot</title>
+
+        <meta charset="UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"/>
+
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="boxed">
+                <div id="chatbox">
+                    <div class="botText">
+                        <div class="bot-div-text">Hello there! Lets to chat</div>
+                    </div>
+                </div>
+                <div id="userInput">
+                    <label for="textInput">Write a message</label>
+                    <input id="textInput" type="text" name="msg" placeholder="Message" />
+                </div>
+                <script>
+                    function scrollDownChatbox() {
+                        // scroll to bottom of div chatbox
+                        document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
+                    }
+                    function getBotResponse() {
+                        var rawText = $("#textInput").val();
+                        var userHtml = '<div class="userText">' +
+                            '<div class="user-div-text">' + rawText + "</div>" +
+                            "</div>";
+
+                        $("#textInput").val("");
+                        $("#chatbox").append(userHtml);
+
+                        scrollDownChatbox();
+
+                        $.get("/get", { msg: rawText }).done(function(data) {
+                            var botHtml = '<div class="botText">' +
+                                '<div class="bot-div-text">' + data + "</div>" +
+                                "</div>";
+                            $("#chatbox").append(botHtml);
+                            scrollDownChatbox();
+                        });
+                        scrollDownChatbox();
+                    }
+
+                    $("#textInput").keypress(function(e) {
+                        if (e.which == 13) {
+                            getBotResponse();
+                        }
+                    });
+                </script>
+            </div>
+
+            <div class="overview">
+                Facebook AI Research has built and open-sourced BlenderBot 2.0, the first chatbot that can simultaneously build long-term memory it can continually access, search the internet for timely information, and have sophisticated conversations on nearly any topic. It’s a significant update to the original BlenderBot, which we open-sourced in 2020 and which broke ground as the first to combine several conversational skills — like personality, empathy, and knowledge — into a single system.
+                <p/>
+                When talking to people, BlenderBot 2.0 demonstrated that it’s better at conducting longer, more knowledgeable, and factually consistent conversations over multiple sessions than its predecessor, the existing state-of-the-art chatbot.
+                <p/>
+                The model takes pertinent information gleaned during conversation and stores it in a long-term memory so it can then leverage this knowledge in ongoing conversations that may continue for days, weeks, or even months. The knowledge is stored separately for each person it speaks with, which ensures that no new information learned in one conversation is used in another.
+                <p/>
+                During conversation, the model can generate contextual internet search queries, read the results, and incorporate that information when responding to people’s questions and comments. This means the model stays up-to-date in an ever-changing world.
+                <p/>
+                Today we’re releasing the complete model, code, and evaluation setup, as well as two new conversational data sets — human conversations bolstered by internet searches, and multisession chats with people that reference previous sessions — used to train the model, so other researchers can reproduce this work and advance conversational AI research.
+            </div>
+        </div>
+    </body>
+</html>
